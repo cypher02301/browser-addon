@@ -11,7 +11,8 @@
     "webNavigation",
     "webRequest",
     "declarativeContent",
-    "scripting"
+    "scripting",
+    "notifications"
   ],
   "host_permissions": [
     "<all_urls>"

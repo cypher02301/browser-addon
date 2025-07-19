@@ -192,10 +192,11 @@ class PopupController {
   async loadStats() {
     try {
       const result = await chrome.storage.local.get(['stats']);
-      const stats = result.stats || { sitesBlocked: 0, threatsDetected: 0 };
+      const stats = result.stats || { sitesBlocked: 0, threatsDetected: 0, alertsShown: 0 };
       
       document.getElementById('sites-blocked').textContent = stats.sitesBlocked || 0;
       document.getElementById('threats-detected').textContent = stats.threatsDetected || 0;
+      document.getElementById('alerts-shown').textContent = stats.alertsShown || 0;
     } catch (error) {
       console.error('Error loading stats:', error);
     }
