@@ -2,7 +2,7 @@
 
 **Created by: Anthony Frederick**  
 **Version: 1.0**  
-**Year: 2024**
+**Year: 2025**
 
 A comprehensive Chrome extension designed to protect users from phishing attacks through real-time URL analysis, suspicious pattern detection, and advanced security features.
 
