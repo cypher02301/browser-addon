@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body {
+      width: 350px;
+      padding: 20px;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .logo {
+      font-size: 24px;
+      margin-bottom: 5px;
+    }
+
+    .title {
+      font-size: 18px;
+      font-weight: bold;
+      margin: 0;
+    }
+
+    .status-card {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 15px;
+      backdrop-filter: blur(10px);
+    }
+
+    .status-safe {
+      border-left: 4px solid #4CAF50;
+    }
+
+    .status-warning {
+      border-left: 4px solid #ff9800;
+    }
+
+    .status-danger {
+      border-left: 4px solid #f44336;
+    }
+
+    .status-icon {
+      font-size: 20px;
+      margin-right: 10px;
+    }
+
+    .status-text {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .risk-score {
+      font-size: 24px;
+      font-weight: bold;
+      text-align: center;
+      margin: 10px 0;
+    }
+
+    .domain-info {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      padding: 10px;
+      margin-bottom: 15px;
+      word-break: break-all;
+      font-size: 12px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 8px 12px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: bold;
+      transition: all 0.3s ease;
+    }
+
+    .btn-report {
+      background: #f44336;
+      color: white;
+    }
+
+    .btn-report:hover {
+      background: #d32f2f;
+    }
+
+    .btn-whitelist {
+      background: #4CAF50;
+      color: white;
+    }
+
+    .btn-whitelist:hover {
+      background: #388e3c;
+    }
+
+    .flags {
+      margin-top: 15px;
+    }
+
+    .flag {
+      background: rgba(255, 152, 0, 0.2);
+      border: 1px solid #ff9800;
+      border-radius: 5px;
+      padding: 8px;
+      margin-bottom: 5px;
+      font-size: 12px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .stat {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 5px;
+      padding: 10px;
+      text-align: center;
+    }
+
+    .stat-number {
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .stat-label {
+      font-size: 10px;
+      opacity: 0.8;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 20px;
+    }
+
+    .spinner {
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-top: 2px solid white;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 10px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .footer {
+      text-align: center;
+      font-size: 10px;
+      opacity: 0.7;
+      margin-top: 15px;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="logo">🛡️</div>
+    <h1 class="title">Phishing Detector</h1>
+  </div>
+
+  <div id="loading" class="loading">
+    <div class="spinner"></div>
+    <div>Analyzing current page...</div>
+  </div>
+
+  <div id="content" style="display: none;">
+    <div id="status" class="status-card">
+      <div class="status-text">
+        <span id="status-icon" class="status-icon"></span>
+        <span id="status-message"></span>
+      </div>
+      <div id="risk-score" class="risk-score"></div>
+    </div>
+
+    <div id="domain-info" class="domain-info">
+      <strong>Current Domain:</strong><br>
+      <span id="current-domain"></span>
+    </div>
+
+    <div class="actions">
+      <button id="report-btn" class="btn btn-report">Report Phishing</button>
+      <button id="whitelist-btn" class="btn btn-whitelist">Trust Site</button>
+    </div>
+
+    <div id="flags" class="flags" style="display: none;">
+      <h3 style="margin: 0 0 10px 0; font-size: 14px;">Security Flags:</h3>
+      <div id="flags-list"></div>
+    </div>
+
+    <div class="stats">
+      <div class="stat">
+        <div id="sites-blocked" class="stat-number">0</div>
+        <div class="stat-label">Sites Blocked</div>
+      </div>
+      <div class="stat">
+        <div id="threats-detected" class="stat-number">0</div>
+        <div class="stat-label">Threats Detected</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    Stay safe online with advanced phishing protection
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
