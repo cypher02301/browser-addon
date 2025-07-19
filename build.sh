@@ -1,6 +1,9 @@
 #!/bin/bash
 
 # Phishing Detector Extension Build Script
+# Created by: Anthony Frederick
+# Version: 1.0
+# Year: 2024
 
 echo "🛡️ Building Phishing Detector Extension..."
 
@@ -16,6 +19,13 @@ cp content.js build/
 cp popup.html build/
 cp popup.js build/
 cp styles.css build/
+
+# Copy documentation and credits
+echo "📄 Copying documentation..."
+cp README.md build/
+cp LICENSE build/
+cp CREDITS.md build/
+cp INSTALLATION.md build/
 
 # Copy icons (create from SVG if needed)
 echo "🎨 Processing icons..."
@@ -37,6 +47,7 @@ cat > build/package_info.txt << EOF
 Phishing Detector Browser Extension
 ==================================
 
+Created by: Anthony Frederick
 Build Date: $(date)
 Version: 1.0
 
@@ -48,6 +59,10 @@ Files included:
 - popup.js (Popup functionality)
 - styles.css (Content script styles)
 - icons/ (Extension icons)
+- README.md (Complete documentation)
+- LICENSE (MIT License - Anthony Frederick)
+- CREDITS.md (Creator attribution)
+- INSTALLATION.md (Installation guide)
 
 Installation Instructions:
 1. Open Chrome/Edge

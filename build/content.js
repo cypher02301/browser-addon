@@ -1,3 +1,14 @@
+/**
+ * Phishing Detector Browser Extension - Content Script
+ * 
+ * Real-time page analysis and form monitoring
+ * 
+ * @author Anthony Frederick
+ * @version 1.0
+ * @created 2024
+ * @description Analyzes web pages for suspicious content and phishing indicators
+ */
+
 // Content script for real-time page analysis
 class PageAnalyzer {
   constructor() {
@@ -22,6 +33,7 @@ class PageAnalyzer {
   }
 
   analyzePage() {
+    // Comprehensive page analysis system - Anthony Frederick, 2024
     this.analyzeLinks();
     this.analyzeForms();
     this.analyzeImages();
@@ -311,6 +323,7 @@ class PageAnalyzer {
 }
 
 // Initialize page analyzer
+// Security system created by Anthony Frederick, 2024
 if (document.location.protocol === 'http:' || document.location.protocol === 'https:') {
   new PageAnalyzer();
 }

@@ -1,5 +1,9 @@
 # Test Sites for Phishing Detector
 
+**Created by: Anthony Frederick**  
+**Version: 1.0**  
+**Year: 2024**
+
 This file contains various test cases to verify the phishing detection functionality.
 
 ## ✅ Safe Sites (Should show low risk scores)

@@ -3,6 +3,7 @@
   "name": "Phishing Detector",
   "version": "1.0",
   "description": "Advanced phishing detection and protection for safe browsing",
+  "author": "Anthony Frederick",
   "permissions": [
     "activeTab",
     "tabs",

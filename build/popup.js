@@ -1,3 +1,14 @@
+/**
+ * Phishing Detector Browser Extension - Popup Interface
+ * 
+ * User interface for displaying security analysis and controls
+ * 
+ * @author Anthony Frederick
+ * @version 1.0
+ * @created 2024
+ * @description Popup controller for extension user interface
+ */
+
 // Popup script for displaying phishing analysis results
 class PopupController {
   constructor() {
@@ -242,6 +253,7 @@ class PopupController {
 }
 
 // Initialize popup when DOM is ready
+// Interface designed and developed by Anthony Frederick, 2024
 document.addEventListener('DOMContentLoaded', () => {
   new PopupController();
 });

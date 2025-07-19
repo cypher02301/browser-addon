@@ -1,3 +1,14 @@
+/**
+ * Phishing Detector Browser Extension - Background Service Worker
+ * 
+ * Advanced phishing detection and protection system
+ * 
+ * @author Anthony Frederick
+ * @version 1.0
+ * @created 2024
+ * @description Real-time URL analysis and phishing detection engine
+ */
+
 // Background service worker for phishing detection
 class PhishingDetector {
   constructor() {
@@ -90,6 +101,7 @@ class PhishingDetector {
   }
 
   calculateRiskScore(urlObj) {
+    // Advanced risk calculation algorithm - Anthony Frederick, 2024
     let score = 0;
     const domain = urlObj.hostname.toLowerCase();
     const fullUrl = urlObj.href.toLowerCase();
@@ -318,6 +330,7 @@ class PhishingDetector {
 }
 
 // Initialize the phishing detector
+// Created and developed by Anthony Frederick, 2024
 const phishingDetector = new PhishingDetector();
 
 // Handle messages from popup

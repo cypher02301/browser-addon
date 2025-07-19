@@ -1,7 +1,8 @@
 Phishing Detector Browser Extension
 ==================================
 
-Build Date: Sat Jul 19 01:00:21 AM UTC 2025
+Created by: Anthony Frederick
+Build Date: Sat Jul 19 01:21:07 AM UTC 2025
 Version: 1.0
 
 Files included:
@@ -12,6 +13,10 @@ Files included:
 - popup.js (Popup functionality)
 - styles.css (Content script styles)
 - icons/ (Extension icons)
+- README.md (Complete documentation)
+- LICENSE (MIT License - Anthony Frederick)
+- CREDITS.md (Creator attribution)
+- INSTALLATION.md (Installation guide)
 
 Installation Instructions:
 1. Open Chrome/Edge
