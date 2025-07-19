@@ -1,0 +1,28 @@
+Phishing Detector Browser Extension
+==================================
+
+Created by: Anthony Frederick
+Build Date: Sat Jul 19 01:29:35 AM UTC 2025
+Version: 1.0
+
+Files included:
+- manifest.json (Extension configuration)
+- background.js (Background service worker)
+- content.js (Content script for page analysis)
+- popup.html (Extension popup interface)
+- popup.js (Popup functionality)
+- styles.css (Content script styles)
+- icons/ (Extension icons)
+- README.md (Complete documentation)
+- LICENSE (MIT License - Anthony Frederick)
+- CREDITS.md (Creator attribution)
+- INSTALLATION.md (Installation guide)
+
+Installation Instructions:
+1. Open Chrome/Edge
+2. Navigate to chrome://extensions/
+3. Enable "Developer mode"
+4. Click "Load unpacked"
+5. Select this build folder
+
+Note: If using SVG icons, convert them to PNG format for proper display.
