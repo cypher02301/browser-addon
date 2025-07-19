@@ -1,58 +1,83 @@
 /**
  * Phishing Detector Browser Extension - Background Service Worker
  * 
- * Advanced phishing detection and protection system
+ * Advanced phishing detection and protection system that analyzes websites
+ * in real-time to protect users from phishing attacks and malicious sites.
  * 
  * @author Anthony Frederick
  * @version 1.0
- * @created 2024
- * @description Real-time URL analysis and phishing detection engine
+ * @created 2025
+ * @description Real-time URL analysis and phishing detection engine with
+ *              multi-layer alerting system and comprehensive threat detection
  */
 
 // Background service worker for phishing detection
+// This is the main engine that runs continuously in the background
 class PhishingDetector {
   constructor() {
+    // Initialize data structures for tracking domains and patterns
+    
+    // Set of domains that have been identified as suspicious through analysis or user reports
     this.suspiciousDomains = new Set();
+    
+    // Set of legitimate domains that should never be flagged as phishing
+    // These are major, well-known websites with strong security practices
     this.whitelistedDomains = new Set([
       'google.com', 'facebook.com', 'microsoft.com', 'apple.com', 
       'amazon.com', 'github.com', 'stackoverflow.com', 'wikipedia.org'
     ]);
+    
+    // Regular expressions that match common phishing language patterns
+    // These phrases are frequently used in phishing attempts to create urgency
     this.phishingPatterns = [
-      /secure.*verify/i,
-      /account.*suspended/i,
-      /click.*here.*immediately/i,
-      /urgent.*action.*required/i,
-      /verify.*identity/i,
-      /update.*payment/i,
-      /suspicious.*activity/i,
-      /limited.*time/i
+      /secure.*verify/i,           // "secure verification" attempts
+      /account.*suspended/i,       // fake account suspension notices
+      /click.*here.*immediately/i, // urgent action requests
+      /urgent.*action.*required/i, // pressure tactics
+      /verify.*identity/i,         // identity verification scams
+      /update.*payment/i,          // payment update phishing
+      /suspicious.*activity/i,     // fake security alerts
+      /limited.*time/i             // time-pressure tactics
     ];
+    
+    // Initialize the detector and start monitoring
     this.init();
   }
 
   init() {
-    // Listen for tab updates
+    // Set up event listeners for browser navigation and tab updates
+    
+    // Monitor when tabs finish loading to analyze the final URL
+    // This catches redirects and ensures we analyze the actual destination
     chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
       if (changeInfo.status === 'complete' && tab.url) {
         this.analyzeUrl(tab.url, tabId);
       }
     });
 
-    // Listen for web navigation
+    // Monitor navigation events to catch URL changes before they complete
+    // This allows for early detection and potential blocking of dangerous sites
     chrome.webNavigation.onBeforeNavigate.addListener((details) => {
+      // Only analyze main frame navigation (not iframes or subresources)
       if (details.frameId === 0) {
         this.analyzeUrl(details.url, details.tabId);
       }
     });
 
-    // Load suspicious domains from storage
+    // Load previously identified suspicious domains from local storage
+    // This maintains threat intelligence across browser sessions
     this.loadSuspiciousDomains();
   }
 
+  /**
+   * Load the list of suspicious domains from Chrome's local storage
+   * This maintains threat intelligence across browser sessions
+   */
   async loadSuspiciousDomains() {
     try {
       const result = await chrome.storage.local.get(['suspiciousDomains']);
       if (result.suspiciousDomains) {
+        // Convert stored array back to Set for efficient lookups
         this.suspiciousDomains = new Set(result.suspiciousDomains);
       }
     } catch (error) {
@@ -60,9 +85,14 @@ class PhishingDetector {
     }
   }
 
+  /**
+   * Save the current list of suspicious domains to Chrome's local storage
+   * This persists threat intelligence for future browser sessions
+   */
   async saveSuspiciousDomains() {
     try {
       await chrome.storage.local.set({
+        // Convert Set to array for storage (JSON serialization)
         suspiciousDomains: Array.from(this.suspiciousDomains)
       });
     } catch (error) {
@@ -70,80 +100,106 @@ class PhishingDetector {
     }
   }
 
+  /**
+   * Main URL analysis function - evaluates a website for phishing characteristics
+   * This is called whenever a user navigates to a new page
+   * 
+   * @param {string} url - The URL to analyze
+   * @param {number} tabId - Chrome tab ID for applying actions
+   */
   analyzeUrl(url, tabId) {
     try {
+      // Parse the URL to extract components for analysis
       const urlObj = new URL(url);
       const domain = urlObj.hostname.toLowerCase();
+      
+      // Calculate comprehensive risk score using multiple detection methods
       const riskScore = this.calculateRiskScore(urlObj);
       
       console.log(`Phishing Detector: Analyzing ${domain} - Risk Score: ${riskScore}`);
       
-      if (riskScore > 60) { // Lowered threshold for blocking
+      // Apply actions based on risk level thresholds
+      if (riskScore > 60) { // High risk - block the site completely
         console.log(`Phishing Detector: BLOCKING ${domain} (Score: ${riskScore})`);
         this.showPhishingAlert(tabId, url, riskScore, 'BLOCKED');
         this.blockPhishingSite(tabId, url, riskScore);
-      } else if (riskScore > 30) { // Lowered threshold for warnings
+      } else if (riskScore > 30) { // Medium risk - show warning but allow access
         console.log(`Phishing Detector: WARNING for ${domain} (Score: ${riskScore})`);
         this.showPhishingAlert(tabId, url, riskScore, 'WARNING');
         this.warnUser(tabId, url, riskScore);
       }
 
-      // Update badge based on risk
+      // Update the extension icon badge to reflect current site status
       this.updateBadge(tabId, riskScore);
       
-      // Update statistics
+      // Update internal statistics for user display
       this.updateDetectionStats(riskScore);
       
-      // Store analysis result
+      // Store analysis results for popup display and future reference
       chrome.storage.local.set({
         [`analysis_${tabId}`]: {
-          url,
-          domain,
-          riskScore,
-          timestamp: Date.now()
+          url,           // Complete URL that was analyzed
+          domain,        // Extracted domain name
+          riskScore,     // Calculated risk score (0-100)
+          timestamp: Date.now()  // When analysis was performed
         }
       });
 
     } catch (error) {
+      // Handle malformed URLs or other analysis errors gracefully
       console.error('Error analyzing URL:', error);
     }
   }
 
+  /**
+   * Advanced risk calculation algorithm - calculates a comprehensive risk score (0-100)
+   * Uses multiple analysis methods to evaluate phishing probability
+   * 
+   * @param {URL} urlObj - Parsed URL object to analyze
+   * @returns {number} Risk score from 0 (safe) to 100 (definitely phishing)
+   * 
+   * Created by Anthony Frederick, 2025
+   */
   calculateRiskScore(urlObj) {
-    // Advanced risk calculation algorithm - Anthony Frederick, 2024
     let score = 0;
     const domain = urlObj.hostname.toLowerCase();
     const fullUrl = urlObj.href.toLowerCase();
 
     console.log(`Phishing Detector: Starting analysis for ${domain}`);
 
-    // Check if domain is whitelisted
+    // First check: Is this a known safe domain?
+    // Whitelisted domains get immediate approval (score 0)
     if (this.whitelistedDomains.has(domain)) {
       console.log(`Phishing Detector: ${domain} is whitelisted`);
       return 0;
     }
 
-    // Check suspicious domains
+    // Second check: Is this a known suspicious domain?
+    // Previously identified threats get high scores immediately
     if (this.suspiciousDomains.has(domain)) {
       console.log(`Phishing Detector: ${domain} is in suspicious domains list`);
-      score += 80;
+      score += 80;  // High penalty for known bad domains
     }
 
-    // Domain analysis
+    // Third check: Analyze the domain structure and characteristics
+    // Look for suspicious patterns in the domain name itself
     const domainScore = this.analyzeDomain(domain);
     console.log(`Phishing Detector: Domain analysis score: ${domainScore}`);
     score += domainScore;
     
-    // URL structure analysis
+    // Fourth check: Analyze the URL structure and protocol
+    // Examine the complete URL for suspicious patterns
     const urlScore = this.analyzeUrlStructure(urlObj);
     console.log(`Phishing Detector: URL structure score: ${urlScore}`);
     score += urlScore;
     
-    // Content pattern analysis (for full URL)
+    // Fifth check: Look for phishing language patterns in the URL
+    // Search for common phishing keywords and phrases
     const patternScore = this.analyzePatterns(fullUrl);
     console.log(`Phishing Detector: Pattern analysis score: ${patternScore}`);
     score += patternScore;
 
+    // Cap the final score at 100 and return result
     const finalScore = Math.min(score, 100);
     console.log(`Phishing Detector: Final risk score for ${domain}: ${finalScore}`);
     return finalScore;
@@ -284,10 +340,18 @@ class PhishingDetector {
     return 0;
   }
 
+  /**
+   * Specialized detection for PayPal impersonation attacks
+   * PayPal is frequently targeted by phishers due to its financial nature
+   * 
+   * @param {string} domain - Domain name to check for PayPal variants
+   * @returns {boolean} True if domain appears to impersonate PayPal
+   */
   detectPayPalImpersonation(domain) {
-    // Common PayPal impersonation patterns
+    // Common PayPal impersonation patterns used by attackers
+    // These represent the most frequently seen character substitutions
     const paypalVariants = [
-      'paypa1',     // 1 instead of l
+      'paypa1',     // 1 instead of l (most common attack)
       'paypaI',     // capital I instead of l
       'payp4l',     // 4 instead of a
       'p4ypal',     // 4 instead of a
@@ -296,8 +360,8 @@ class PhishingDetector {
       'papyal',     // transposed letters
       'payapl',     // transposed letters
       'paipal',     // i instead of y
-      'paypal1',    // with number
-      'paypal-'     // with dash
+      'paypal1',    // with number suffix
+      'paypal-'     // with dash (often followed by fake words)
     ];
     
     console.log(`Phishing Detector: Checking PayPal variants for domain: ${domain}`);
@@ -340,14 +404,25 @@ class PhishingDetector {
     return false;
   }
 
+  /**
+   * Display a prominent alert dialog to warn users about phishing threats
+   * This creates a modal overlay that blocks page interaction until dismissed
+   * 
+   * @param {number} tabId - Chrome tab ID where alert should be shown
+   * @param {string} url - The suspicious URL being flagged
+   * @param {number} riskScore - Risk score (0-100) for the threat level
+   * @param {string} alertType - Either 'WARNING' or 'BLOCKED' for different alert styles
+   */
   async showPhishingAlert(tabId, url, riskScore, alertType) {
     try {
       const domain = new URL(url).hostname;
       
+      // Inject a custom modal dialog directly into the webpage
+      // This ensures the user sees the warning regardless of page content
       await chrome.scripting.executeScript({
         target: { tabId: tabId },
         func: (domain, riskScore, alertType, url) => {
-          // Create custom alert dialog - Anthony Frederick, 2024
+          // Create custom alert dialog - Anthony Frederick, 2025
           const alertDialog = document.createElement('div');
           alertDialog.id = 'phishing-alert-dialog';
           alertDialog.innerHTML = `
@@ -712,7 +787,7 @@ class PhishingDetector {
 }
 
 // Initialize the phishing detector
-// Created and developed by Anthony Frederick, 2024
+// Created and developed by Anthony Frederick, 2025
 const phishingDetector = new PhishingDetector();
 
 // Handle notification clicks

@@ -1,44 +1,59 @@
 /**
  * Phishing Detector Browser Extension - Content Script
  * 
- * Real-time page analysis and form monitoring
+ * Real-time page analysis and form monitoring that runs on every webpage
+ * to detect suspicious content, forms, links, and phishing indicators.
  * 
  * @author Anthony Frederick
  * @version 1.0
- * @created 2024
+ * @created 2025
  * @description Analyzes web pages for suspicious content and phishing indicators
+ *              including forms, links, images, and text content patterns
  */
 
 // Content script for real-time page analysis
+// This script is injected into every webpage to monitor for threats
 class PageAnalyzer {
   constructor() {
-    this.suspiciousElements = [];
-    this.formSubmissions = [];
+    // Arrays to track suspicious elements and user interactions
+    this.suspiciousElements = [];  // Elements flagged as potentially malicious
+    this.formSubmissions = [];     // Log of form submissions for analysis
     this.init();
   }
 
+  /**
+   * Initialize the page analyzer and set up monitoring
+   * This runs when the content script is first loaded
+   */
   init() {
-    // Wait for DOM to be ready
+    // Wait for DOM to be ready before starting analysis
+    // Handle both cases: page still loading or already loaded
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', () => this.analyzePage());
     } else {
+      // Page already loaded, start analysis immediately
       this.analyzePage();
     }
 
-    // Monitor form submissions
-    this.monitorForms();
+    // Set up continuous monitoring for user interactions
+    this.monitorForms();      // Watch for form submissions
     
-    // Monitor dynamic content changes
-    this.observeMutations();
+    // Set up monitoring for dynamic content changes (AJAX, etc.)
+    this.observeMutations();  // Watch for DOM modifications
   }
 
+  /**
+   * Comprehensive page analysis system - examines all elements for threats
+   * This is the main analysis function that coordinates all detection methods
+   * 
+   * Created by Anthony Frederick, 2025
+   */
   analyzePage() {
-    // Comprehensive page analysis system - Anthony Frederick, 2024
-    this.analyzeLinks();
-    this.analyzeForms();
-    this.analyzeImages();
-    this.analyzeText();
-    this.checkSSL();
+    this.analyzeLinks();   // Check all links for suspicious destinations
+    this.analyzeForms();   // Examine forms for insecure data collection
+    this.analyzeImages();  // Analyze images for potential deception
+    this.analyzeText();    // Scan text content for phishing language
+    this.checkSSL();       // Verify SSL/HTTPS security status
   }
 
   analyzeLinks() {
@@ -323,7 +338,7 @@ class PageAnalyzer {
 }
 
 // Initialize page analyzer
-// Security system created by Anthony Frederick, 2024
+// Security system created by Anthony Frederick, 2025
 if (document.location.protocol === 'http:' || document.location.protocol === 'https:') {
   new PageAnalyzer();
 }

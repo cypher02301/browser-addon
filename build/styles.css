@@ -1,15 +1,18 @@
 /**
  * Phishing Detector Browser Extension - Content Script Styles
  * 
- * Visual indicators and warning overlays for phishing detection
+ * Visual indicators and warning overlays for phishing detection.
+ * These styles are injected into web pages to display security warnings,
+ * highlight suspicious elements, and show blocking interfaces.
  * 
  * @author Anthony Frederick
  * @version 1.0
- * @created 2024
- * @description CSS styles for content script visual elements
+ * @created 2025
+ * @description CSS styles for content script visual elements including
+ *              modal dialogs, warning overlays, and element highlighting
  */
 
-/* Phishing Detector Content Script Styles */
+/* Phishing Detector Content Script Styles - Injected into web pages */
 
 /* Warning overlay styles */
 .phishing-warning-overlay {

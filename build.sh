@@ -3,7 +3,7 @@
 # Phishing Detector Extension Build Script
 # Created by: Anthony Frederick
 # Version: 1.0
-# Year: 2024
+# Year: 2025
 
 echo "🛡️ Building Phishing Detector Extension..."
 

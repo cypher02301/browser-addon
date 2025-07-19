@@ -4,7 +4,7 @@
 
 **Anthony Frederick**
 - **Role**: Creator, Lead Developer & Security Engineer
-- **Year**: 2024
+- **Year**: 2025
 - **Contributions**: 
   - Complete extension architecture and design
   - Advanced phishing detection algorithms
@@ -18,9 +18,9 @@
 
 - **Project Name**: Phishing Detector Browser Extension
 - **Version**: 1.0
-- **Development Year**: 2024
+- **Development Year**: 2025
 - **License**: MIT License
-- **Copyright**: © 2024 Anthony Frederick
+- **Copyright**: © 2025 Anthony Frederick
 
 ## Technical Contributions by Anthony Frederick
 
@@ -52,16 +52,16 @@
 
 ## Recognition
 
-This entire project, including all code, documentation, design, and security implementations, was created by **Anthony Frederick** in 2024. The extension represents a comprehensive approach to browser security and phishing protection.
+This entire project, including all code, documentation, design, and security implementations, was created by **Anthony Frederick** in 2025. The extension represents a comprehensive approach to browser security and phishing protection.
 
 ## Contact
 
 For questions about this project or to reach the creator:
 - Created by: Anthony Frederick
-- Project Year: 2024
+- Project Year: 2025
 - License: MIT
 
 ---
 
 *"Protecting users from phishing attacks through innovative browser security technology."*  
-**- Anthony Frederick, 2024**
+**- Anthony Frederick, 2025**

@@ -2,7 +2,7 @@
 
 **Created by: Anthony Frederick**  
 **Version: 1.0**  
-**Year: 2024**
+**Year: 2025**
 
 A comprehensive Chrome extension designed to protect users from phishing attacks through real-time URL analysis, suspicious pattern detection, and advanced security features.
 
@@ -183,7 +183,7 @@ The extension detects various phishing techniques:
 **Anthony Frederick**  
 - Creator and Lead Developer
 - Security Software Specialist
-- Year: 2024
+- Year: 2025
 
 ## 📝 License
 
@@ -212,6 +212,6 @@ This extension provides an additional layer of security but should not be your o
 **Stay Safe Online! 🛡️**
 
 *"Protecting users from phishing attacks through innovative browser security technology."*  
-**- Anthony Frederick, Creator & Developer, 2024**
+**- Anthony Frederick, Creator & Developer, 2025**
 
 For support or questions about this extension created by Anthony Frederick, please refer to the documentation or open an issue on GitHub.

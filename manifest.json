@@ -1,53 +1,67 @@
 {
+  // Chrome Extension Manifest V3 - Configuration file for the Phishing Detector
+  // This file defines the extension's metadata, permissions, and component structure
   "manifest_version": 3,
   "name": "Phishing Detector",
   "version": "1.0",
   "description": "Advanced phishing detection and protection for safe browsing",
   "author": "Anthony Frederick",
+  // Required permissions for the extension to function properly
   "permissions": [
-    "activeTab",
-    "tabs",
-    "storage",
-    "webNavigation",
-    "webRequest",
-    "declarativeContent",
-    "scripting",
-    "notifications"
+    "activeTab",          // Access to currently active tab for analysis
+    "tabs",               // Monitor tab changes and navigation
+    "storage",            // Store whitelists, statistics, and settings locally
+    "webNavigation",      // Detect when users navigate to new pages
+    "webRequest",         // Monitor web requests for additional analysis
+    "declarativeContent", // Enable content script injection based on conditions
+    "scripting",          // Modern API for injecting scripts into pages
+    "notifications"       // Show system-level alert notifications to users
   ],
+  // Grant access to all URLs for comprehensive phishing protection
   "host_permissions": [
-    "<all_urls>"
+    "<all_urls>"  // Allows analysis of any website the user visits
   ],
+  
+  // Background service worker - runs continuously to monitor and analyze URLs
   "background": {
-    "service_worker": "background.js"
+    "service_worker": "background.js"  // Main detection engine
   },
+  
+  // Content scripts - injected into every webpage for real-time analysis
   "content_scripts": [
     {
-      "matches": ["<all_urls>"],
-      "js": ["content.js"],
-      "css": ["styles.css"],
-      "run_at": "document_start"
+      "matches": ["<all_urls>"],           // Run on all websites
+      "js": ["content.js"],                // Page analysis and form monitoring
+      "css": ["styles.css"],               // Visual indicators and warning styles
+      "run_at": "document_start"           // Start analysis as early as possible
     }
   ],
+  
+  // Extension toolbar icon and popup configuration
   "action": {
-    "default_popup": "popup.html",
-    "default_title": "Phishing Detector",
-    "default_icon": {
-      "16": "icons/icon16.png",
-      "32": "icons/icon32.png",
-      "48": "icons/icon48.png",
-      "128": "icons/icon128.png"
+    "default_popup": "popup.html",         // User interface when clicking extension icon
+    "default_title": "Phishing Detector", // Tooltip text for the extension icon
+    "default_icon": {                      // Icon sizes for different display densities
+      "16": "icons/icon16.png",            // Toolbar icon (normal density)
+      "32": "icons/icon32.png",            // Toolbar icon (high density)
+      "48": "icons/icon48.png",            // Extension management page
+      "128": "icons/icon128.png"           // Chrome Web Store and installation
     }
   },
+  
+  // Extension icons for various Chrome interfaces
   "icons": {
-    "16": "icons/icon16.png",
-    "32": "icons/icon32.png",
-    "48": "icons/icon48.png",
-    "128": "icons/icon128.png"
+    "16": "icons/icon16.png",              // Small icon for extension list
+    "32": "icons/icon32.png",              // Medium icon for extension details
+    "48": "icons/icon48.png",              // Large icon for extension management
+    "128": "icons/icon128.png"             // High-resolution icon for store
   },
+  
+  // Resources that can be accessed by web pages (for warning displays)
   "web_accessible_resources": [
     {
-      "resources": ["warning.html", "icons/*"],
-      "matches": ["<all_urls>"]
+      "resources": ["warning.html", "icons/*"],  // Files that pages can load
+      "matches": ["<all_urls>"]                   // Available to all websites
     }
   ]
 }
