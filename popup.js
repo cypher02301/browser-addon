@@ -112,12 +112,13 @@ class PopupController {
       const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
       
       if (tab) {
-        const results = await chrome.tabs.executeScript(tab.id, {
-          code: 'window.phishingFlags || []'
+        const results = await chrome.scripting.executeScript({
+          target: { tabId: tab.id },
+          func: () => window.phishingFlags || []
         });
         
-        if (results && results[0] && results[0].length > 0) {
-          this.displayFlags(results[0]);
+        if (results && results[0] && results[0].result && results[0].result.length > 0) {
+          this.displayFlags(results[0].result);
         }
       }
     } catch (error) {

@@ -10,7 +10,8 @@
     "storage",
     "webNavigation",
     "webRequest",
-    "declarativeContent"
+    "declarativeContent",
+    "scripting"
   ],
   "host_permissions": [
     "<all_urls>"
