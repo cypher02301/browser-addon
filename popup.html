@@ -1,173 +1,387 @@
 <!DOCTYPE html>
-<!--
-  Phishing Detector Browser Extension - Popup Interface
-  
-  Created by: Anthony Frederick
-  Version: 1.0
-  Year: 2024
-  
-  Advanced phishing detection and protection interface
--->
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Phishing Detector Pro</title>
   <style>
-    body {
-      width: 350px;
-      padding: 20px;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    :root {
+      --primary: #4a6cf7;
+      --primary-dark: #3d5ae0;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --dark-bg: #0f172a;
+      --card-bg: #1e293b;
+      --card-border: #334155;
+      --text-primary: #f1f5f9;
+      --text-secondary: #94a3b8;
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * {
       margin: 0;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    }
+
+    body {
+      width: 380px;
+      background: var(--dark-bg);
+      color: var(--text-primary);
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(74,108,247,0.1) 0%, rgba(15,23,42,1) 70%);
+      z-index: -1;
     }
 
     .header {
-      text-align: center;
-      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      margin-bottom: 24px;
+      position: relative;
+    }
+
+    .logo-container {
+      width: 48px;
+      height: 48px;
+      background: var(--primary);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 14px;
+      box-shadow: 0 4px 6px rgba(74, 108, 247, 0.3);
     }
 
     .logo {
       font-size: 24px;
-      margin-bottom: 5px;
     }
 
-    .title {
-      font-size: 18px;
-      font-weight: bold;
-      margin: 0;
+    .header-content h1 {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 2px;
+      letter-spacing: -0.5px;
+    }
+
+    .header-content p {
+      font-size: 12px;
+      color: var(--text-secondary);
+      font-weight: 500;
     }
 
     .status-card {
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 10px;
-      padding: 15px;
-      margin-bottom: 15px;
-      backdrop-filter: blur(10px);
+      background: var(--card-bg);
+      border-radius: 14px;
+      padding: 18px;
+      margin-bottom: 20px;
+      border: 1px solid var(--card-border);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      position: relative;
+      overflow: hidden;
+      transition: var(--transition);
     }
 
-    .status-safe {
-      border-left: 4px solid #4CAF50;
+    .status-card.safe::before {
+      background: linear-gradient(135deg, var(--success), #059669);
+    }
+    
+    .status-card.warning::before {
+      background: linear-gradient(135deg, var(--warning), #d97706);
+    }
+    
+    .status-card.danger::before {
+      background: linear-gradient(135deg, var(--danger), #dc2626);
+    }
+    
+    .status-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 6px;
+      height: 100%;
     }
 
-    .status-warning {
-      border-left: 4px solid #ff9800;
-    }
-
-    .status-danger {
-      border-left: 4px solid #f44336;
+    .status-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 16px;
     }
 
     .status-icon {
-      font-size: 20px;
-      margin-right: 10px;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 12px;
+      flex-shrink: 0;
     }
 
-    .status-text {
-      font-weight: bold;
-      margin-bottom: 5px;
+    .safe .status-icon {
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--success);
+    }
+
+    .warning .status-icon {
+      background: rgba(245, 158, 11, 0.15);
+      color: var(--warning);
+    }
+
+    .danger .status-icon {
+      background: rgba(239, 68, 68, 0.15);
+      color: var(--danger);
+    }
+
+    .status-info h2 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .status-info p {
+      font-size: 12px;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    .risk-meter {
+      width: 100%;
+      height: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 12px;
+      position: relative;
+    }
+
+    .risk-level {
+      height: 100%;
+      border-radius: 4px;
+      transition: var(--transition);
+    }
+
+    .safe .risk-level {
+      width: 15%;
+      background: var(--success);
+    }
+
+    .warning .risk-level {
+      width: 55%;
+      background: var(--warning);
+    }
+
+    .danger .risk-level {
+      width: 95%;
+      background: var(--danger);
     }
 
     .risk-score {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4px;
+    }
+
+    .risk-score span {
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .risk-value {
       font-size: 24px;
-      font-weight: bold;
+      font-weight: 700;
       text-align: center;
       margin: 10px 0;
     }
 
     .domain-info {
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 8px;
-      padding: 10px;
-      margin-bottom: 15px;
+      background: rgba(30, 41, 59, 0.6);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 20px;
+      border: 1px solid var(--card-border);
+      font-size: 13px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .domain-info::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(74, 108, 247, 0.05), transparent);
+      z-index: -1;
+    }
+
+    .domain-info strong {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--text-secondary);
+      font-weight: 600;
+    }
+
+    .domain-info span {
       word-break: break-all;
-      font-size: 12px;
+      font-weight: 500;
+      line-height: 1.4;
     }
 
     .actions {
       display: flex;
-      gap: 10px;
-      margin-bottom: 15px;
+      gap: 12px;
+      margin-bottom: 20px;
     }
 
     .btn {
       flex: 1;
-      padding: 8px 12px;
+      padding: 12px;
       border: none;
-      border-radius: 5px;
+      border-radius: 10px;
       cursor: pointer;
-      font-size: 12px;
-      font-weight: bold;
-      transition: all 0.3s ease;
+      font-size: 13px;
+      font-weight: 600;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .btn:active {
+      transform: translateY(2px);
     }
 
     .btn-report {
-      background: #f44336;
+      background: linear-gradient(135deg, var(--danger), #b91c1c);
       color: white;
+      box-shadow: 0 4px 6px rgba(239, 68, 68, 0.25);
     }
 
     .btn-report:hover {
-      background: #d32f2f;
+      background: linear-gradient(135deg, #dc2626, #991b1b);
+      box-shadow: 0 6px 8px rgba(239, 68, 68, 0.35);
     }
 
     .btn-whitelist {
-      background: #4CAF50;
+      background: linear-gradient(135deg, var(--success), #047857);
       color: white;
+      box-shadow: 0 4px 6px rgba(16, 185, 129, 0.25);
     }
 
     .btn-whitelist:hover {
-      background: #388e3c;
+      background: linear-gradient(135deg, #059669, #065f46);
+      box-shadow: 0 6px 8px rgba(16, 185, 129, 0.35);
     }
 
     .flags {
-      margin-top: 15px;
+      background: var(--card-bg);
+      border-radius: 14px;
+      padding: 18px;
+      margin-bottom: 20px;
+      border: 1px solid var(--card-border);
+    }
+
+    .flags h3 {
+      font-size: 15px;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
     .flag {
-      background: rgba(255, 152, 0, 0.2);
-      border: 1px solid #ff9800;
-      border-radius: 5px;
-      padding: 8px;
-      margin-bottom: 5px;
-      font-size: 12px;
+      background: rgba(245, 158, 11, 0.1);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 10px;
+      font-size: 13px;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .flag:last-child {
+      margin-bottom: 0;
+    }
+
+    .flag-icon {
+      color: var(--warning);
+      flex-shrink: 0;
+      margin-top: 2px;
     }
 
     .stats {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-top: 15px;
+      gap: 12px;
+      margin-bottom: 20px;
     }
 
     .stat {
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 5px;
-      padding: 10px;
+      background: var(--card-bg);
+      border-radius: 14px;
+      padding: 16px;
       text-align: center;
+      border: 1px solid var(--card-border);
+      transition: var(--transition);
+    }
+
+    .stat:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
     }
 
     .stat-number {
-      font-size: 18px;
-      font-weight: bold;
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 4px;
+      background: linear-gradient(to right, var(--primary), var(--success));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
     }
 
     .stat-label {
-      font-size: 10px;
-      opacity: 0.8;
+      font-size: 12px;
+      color: var(--text-secondary);
+      font-weight: 500;
     }
 
     .loading {
       text-align: center;
-      padding: 20px;
+      padding: 40px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
     .spinner {
-      border: 2px solid rgba(255, 255, 255, 0.3);
-      border-top: 2px solid white;
+      border: 3px solid rgba(255, 255, 255, 0.1);
+      border-top: 3px solid var(--primary);
       border-radius: 50%;
-      width: 20px;
-      height: 20px;
+      width: 40px;
+      height: 40px;
       animation: spin 1s linear infinite;
-      margin: 0 auto 10px;
+      margin-bottom: 16px;
     }
 
     @keyframes spin {
@@ -175,66 +389,141 @@
       100% { transform: rotate(360deg); }
     }
 
+    .loading-text {
+      font-size: 14px;
+      font-weight: 500;
+    }
+
     .footer {
       text-align: center;
-      font-size: 10px;
-      opacity: 0.7;
-      margin-top: 15px;
+      font-size: 11px;
+      color: var(--text-secondary);
+      padding-top: 20px;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      line-height: 1.5;
+    }
+
+    /* Status animations */
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+
+    .status-card.danger {
+      animation: pulse 1.5s ease-in-out infinite;
     }
   </style>
 </head>
 <body>
   <div class="header">
-    <div class="logo">🛡️</div>
-    <h1 class="title">Phishing Detector</h1>
+    <div class="logo-container">
+      <div class="logo">🛡️</div>
+    </div>
+    <div class="header-content">
+      <h1>Phishing Detector Pro</h1>
+      <p>Advanced Real-time Protection</p>
+    </div>
   </div>
 
   <div id="loading" class="loading">
     <div class="spinner"></div>
-    <div>Analyzing current page...</div>
+    <div class="loading-text">Analyzing website security...</div>
   </div>
 
   <div id="content" style="display: none;">
     <div id="status" class="status-card">
-      <div class="status-text">
-        <span id="status-icon" class="status-icon"></span>
-        <span id="status-message"></span>
+      <div class="status-header">
+        <div class="status-icon">⚠️</div>
+        <div class="status-info">
+          <h2 id="status-message">Suspicious Activity Detected</h2>
+          <p>This site has security issues</p>
+        </div>
       </div>
-      <div id="risk-score" class="risk-score"></div>
+      
+      <div class="risk-meter">
+        <div class="risk-level"></div>
+      </div>
+      
+      <div class="risk-score">
+        <span>Low Risk</span>
+        <span>High Risk</span>
+      </div>
+      
+      <div id="risk-value" class="risk-value">78%</div>
     </div>
 
     <div id="domain-info" class="domain-info">
-      <strong>Current Domain:</strong><br>
-      <span id="current-domain"></span>
+      <strong>CURRENT DOMAIN</strong>
+      <span id="current-domain">https://secure-login-bank-example.com/verify/account</span>
     </div>
 
     <div class="actions">
-      <button id="report-btn" class="btn btn-report">Report Phishing</button>
-      <button id="whitelist-btn" class="btn btn-whitelist">Trust Site</button>
+      <button id="report-btn" class="btn btn-report">
+        <span>⚠️</span> Report Phishing
+      </button>
+      <button id="whitelist-btn" class="btn btn-whitelist">
+        <span>✅</span> Trust Site
+      </button>
     </div>
 
-    <div id="flags" class="flags" style="display: none;">
-      <h3 style="margin: 0 0 10px 0; font-size: 14px;">Security Flags:</h3>
-      <div id="flags-list"></div>
+    <div id="flags" class="flags">
+      <h3>🚩 Security Flags Detected</h3>
+      <div id="flags-list">
+        <div class="flag">
+          <div class="flag-icon">🔍</div>
+          <div>Suspicious domain name (mismatched with company name)</div>
+        </div>
+        <div class="flag">
+          <div class="flag-icon">🔒</div>
+          <div>Invalid SSL certificate detected</div>
+        </div>
+        <div class="flag">
+          <div class="flag-icon">📝</div>
+          <div>Request for sensitive information (banking credentials)</div>
+        </div>
+      </div>
     </div>
 
     <div class="stats">
       <div class="stat">
-        <div id="sites-blocked" class="stat-number">0</div>
+        <div id="sites-blocked" class="stat-number">142</div>
         <div class="stat-label">Sites Blocked</div>
       </div>
       <div class="stat">
-        <div id="threats-detected" class="stat-number">0</div>
+        <div id="threats-detected" class="stat-number">367</div>
         <div class="stat-label">Threats Detected</div>
       </div>
     </div>
   </div>
 
   <div class="footer">
-    Stay safe online with advanced phishing protection<br>
-    <small>© 2024 Anthony Frederick</small>
+    Stay protected with AI-powered phishing detection<br>
+    <small>© 2024 Anthony Frederick | v2.0</small>
   </div>
 
-  <script src="popup.js"></script>
+  <script>
+    // Simulate loading and content display
+    setTimeout(() => {
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('content').style.display = 'block';
+      
+      // Set status to danger for demonstration
+      const statusCard = document.getElementById('status');
+      statusCard.classList.add('danger');
+      
+      // Update domain for demonstration
+      document.getElementById('current-domain').textContent = window.location.host;
+    }, 1500);
+    
+    // Button event listeners
+    document.getElementById('report-btn').addEventListener('click', () => {
+      alert('Phishing report submitted. Thank you for helping improve security!');
+    });
+    
+    document.getElementById('whitelist-btn').addEventListener('click', () => {
+      alert('This site has been added to your trusted list.');
+    });
+  </script>
 </body>
 </html>
