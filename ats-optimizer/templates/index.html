@@ -1,0 +1,565 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume ATS Optimizer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px 30px;
+        }
+
+        .description {
+            background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border-left: 5px solid #3498db;
+        }
+
+        .description h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .description ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .description li {
+            padding: 8px 0;
+            color: #555;
+            position: relative;
+            padding-left: 25px;
+        }
+
+        .description li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #27ae60;
+            font-weight: bold;
+        }
+
+        .form-container {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #2c3e50;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .file-input {
+            opacity: 0;
+            position: absolute;
+            z-index: -1;
+        }
+
+        .file-input-label {
+            display: block;
+            padding: 15px 20px;
+            background: white;
+            border: 2px dashed #3498db;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #3498db;
+            font-weight: 500;
+        }
+
+        .file-input-label:hover {
+            background: #ecf0f1;
+            border-color: #2980b9;
+        }
+
+        .file-input-label.has-file {
+            border-style: solid;
+            background: #e8f5e8;
+            color: #27ae60;
+            border-color: #27ae60;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 1rem;
+            resize: vertical;
+            min-height: 150px;
+            transition: border-color 0.3s ease;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(52, 152, 219, 0.3);
+        }
+
+        .submit-btn:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .result {
+            margin-top: 30px;
+            border-radius: 15px;
+            overflow: hidden;
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result-header {
+            padding: 25px 30px;
+            color: white;
+            text-align: center;
+        }
+
+        .score-excellent { background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%); }
+        .score-good { background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%); }
+        .score-poor { background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%); }
+
+        .score-value {
+            font-size: 3rem;
+            font-weight: 300;
+            margin-bottom: 10px;
+        }
+
+        .score-label {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .result-content {
+            padding: 30px;
+            background: white;
+        }
+
+        .suggestions {
+            margin-bottom: 30px;
+        }
+
+        .suggestions h3 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.4rem;
+        }
+
+        .suggestion-item {
+            background: #fff5f5;
+            border-left: 4px solid #e74c3c;
+            padding: 15px 20px;
+            margin-bottom: 10px;
+            border-radius: 0 8px 8px 0;
+            transition: all 0.3s ease;
+        }
+
+        .suggestion-item:hover {
+            background: #ffeaea;
+            transform: translateX(5px);
+        }
+
+        .keywords-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .keywords-section {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+        }
+
+        .keyword-list {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        .keyword-list h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        .keyword-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .keyword-tag {
+            background: #3498db;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .keyword-tag.missing {
+            background: #e74c3c;
+        }
+
+        .keyword-tag.matching {
+            background: #27ae60;
+        }
+
+        .success-message {
+            text-align: center;
+            padding: 30px;
+            color: #27ae60;
+        }
+
+        .success-message .icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            border-left: 4px solid #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Resume ATS Optimizer</h1>
+            <p>Optimize your resume for Applicant Tracking Systems</p>
+        </div>
+
+        <div class="content">
+            <div class="description">
+                <h3>🚀 How It Works:</h3>
+                <ul>
+                    <li>Upload your resume (PDF or DOCX format)</li>
+                    <li>Paste the target job description</li>
+                    <li>Get an instant ATS compatibility score (0-100%)</li>
+                    <li>Receive specific optimization suggestions</li>
+                    <li>View detailed keyword analysis</li>
+                </ul>
+            </div>
+
+            <div class="form-container">
+                <form id="uploadForm" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="resume">Upload Resume</label>
+                        <div class="file-input-wrapper">
+                            <input type="file" id="resume" name="resume" accept=".pdf,.docx" required class="file-input">
+                            <label for="resume" class="file-input-label" id="fileLabel">
+                                📄 Choose PDF or DOCX file
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="job_description">Job Description</label>
+                        <textarea name="job_description" id="job_description" placeholder="Paste the complete job description here..." required></textarea>
+                    </div>
+
+                    <button type="submit" class="submit-btn" id="submitBtn">
+                        Analyze Resume
+                    </button>
+                </form>
+            </div>
+
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>Analyzing your resume... This may take a moment.</p>
+            </div>
+
+            <div id="result" class="result">
+                <div id="resultHeader" class="result-header">
+                    <div class="score-value" id="scoreValue"></div>
+                    <div class="score-label">ATS Compatibility Score</div>
+                </div>
+                
+                <div class="result-content">
+                    <div id="resultMessage"></div>
+                    
+                    <div id="suggestions" class="suggestions" style="display: none;">
+                        <h3>💡 Optimization Suggestions</h3>
+                        <div id="suggestionsList"></div>
+                    </div>
+
+                    <div id="keywordsSection" class="keywords-section" style="display: none;">
+                        <div class="keyword-list">
+                            <h3>❌ Missing Keywords</h3>
+                            <div id="missingKeywords" class="keyword-tags"></div>
+                        </div>
+                        <div class="keyword-list">
+                            <h3>✅ Matching Keywords</h3>
+                            <div id="matchingKeywords" class="keyword-tags"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // File input handling
+        document.getElementById('resume').addEventListener('change', function(e) {
+            const fileLabel = document.getElementById('fileLabel');
+            const fileName = e.target.files[0]?.name;
+            
+            if (fileName) {
+                fileLabel.textContent = `📄 ${fileName}`;
+                fileLabel.classList.add('has-file');
+            } else {
+                fileLabel.textContent = '📄 Choose PDF or DOCX file';
+                fileLabel.classList.remove('has-file');
+            }
+        });
+
+        // Form submission
+        document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submitBtn');
+            const loading = document.getElementById('loading');
+            const result = document.getElementById('result');
+            
+            // Show loading state
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Analyzing...';
+            loading.style.display = 'block';
+            result.style.display = 'none';
+            
+            const formData = new FormData(e.target);
+            
+            try {
+                const response = await fetch('/analyze', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    displayResults(data);
+                } else {
+                    showError(data.error || 'An error occurred');
+                }
+            } catch (error) {
+                showError('Network error: ' + error.message);
+            } finally {
+                // Reset button state
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Analyze Resume';
+                loading.style.display = 'none';
+            }
+        });
+
+        function displayResults(data) {
+            const result = document.getElementById('result');
+            const resultHeader = document.getElementById('resultHeader');
+            const scoreValue = document.getElementById('scoreValue');
+            const resultMessage = document.getElementById('resultMessage');
+            const suggestions = document.getElementById('suggestions');
+            const keywordsSection = document.getElementById('keywordsSection');
+            
+            // Display score
+            scoreValue.textContent = data.score + '%';
+            
+            // Set color based on score
+            if (data.score >= 80) {
+                resultHeader.className = 'result-header score-excellent';
+                resultMessage.innerHTML = `
+                    <div class="success-message">
+                        <div class="icon">🎉</div>
+                        <h3>Excellent! Your resume is well optimized!</h3>
+                        <p>Your resume shows strong compatibility with the job description. You're ready to apply!</p>
+                    </div>
+                `;
+                suggestions.style.display = 'none';
+                keywordsSection.style.display = 'none';
+            } else if (data.score >= 60) {
+                resultHeader.className = 'result-header score-good';
+                showOptimizationResults(data, 'Good score, but there\'s room for improvement!');
+            } else {
+                resultHeader.className = 'result-header score-poor';
+                showOptimizationResults(data, 'Your resume needs optimization to pass ATS filters.');
+            }
+            
+            result.style.display = 'block';
+            result.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function showOptimizationResults(data, message) {
+            const resultMessage = document.getElementById('resultMessage');
+            const suggestions = document.getElementById('suggestions');
+            const keywordsSection = document.getElementById('keywordsSection');
+            const suggestionsList = document.getElementById('suggestionsList');
+            const missingKeywords = document.getElementById('missingKeywords');
+            const matchingKeywords = document.getElementById('matchingKeywords');
+
+            resultMessage.innerHTML = `<p style="text-align: center; font-size: 1.1rem; margin-bottom: 20px; color: #2c3e50;">${message}</p>`;
+
+            // Display suggestions
+            if (data.suggestions && data.suggestions.length > 0) {
+                let suggestionsHTML = '';
+                data.suggestions.forEach(suggestion => {
+                    suggestionsHTML += `<div class="suggestion-item">${suggestion}</div>`;
+                });
+                suggestionsList.innerHTML = suggestionsHTML;
+                suggestions.style.display = 'block';
+            }
+
+            // Display keywords
+            if (data.missing_keywords || data.matching_keywords) {
+                // Missing keywords
+                if (data.missing_keywords && data.missing_keywords.length > 0) {
+                    let missingHTML = '';
+                    data.missing_keywords.forEach(keyword => {
+                        missingHTML += `<span class="keyword-tag missing">${keyword}</span>`;
+                    });
+                    missingKeywords.innerHTML = missingHTML;
+                } else {
+                    missingKeywords.innerHTML = '<p>No missing keywords found!</p>';
+                }
+
+                // Matching keywords
+                if (data.matching_keywords && data.matching_keywords.length > 0) {
+                    let matchingHTML = '';
+                    data.matching_keywords.forEach(keyword => {
+                        matchingHTML += `<span class="keyword-tag matching">${keyword}</span>`;
+                    });
+                    matchingKeywords.innerHTML = matchingHTML;
+                } else {
+                    matchingKeywords.innerHTML = '<p>No matching keywords found.</p>';
+                }
+
+                keywordsSection.style.display = 'grid';
+            }
+        }
+
+        function showError(message) {
+            const result = document.getElementById('result');
+            result.innerHTML = `
+                <div class="error-message">
+                    <strong>Error:</strong> ${message}
+                </div>
+            `;
+            result.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
