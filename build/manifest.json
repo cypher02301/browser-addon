@@ -9,8 +9,6 @@
     "tabs",
     "storage",
     "webNavigation",
-    "webRequest",
-    "declarativeContent",
     "scripting"
   ],
   "host_permissions": [
