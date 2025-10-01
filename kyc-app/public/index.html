@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KYC Age Verification</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 2rem; }
+    form { display: flex; flex-direction: column; max-width: 300px; gap: 0.5rem; }
+    input[type="submit"] { padding: 0.5rem; }
+    #result { margin-top: 1rem; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h1>KYC Age Verification (21+)</h1>
+  <form id="kycForm">
+    <label>Name<input name="name" required></label>
+    <label>Date of Birth<input type="date" name="dob" required></label>
+    <label>ID Image<input type="file" name="idImage" accept="image/*" required></label>
+    <input type="submit" value="Verify">
+  </form>
+  <div id="result"></div>
+
+<script>
+  const form = document.getElementById('kycForm');
+  const resultDiv = document.getElementById('result');
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const formData = new FormData(form);
+    const res = await fetch('/api/verify', { method: 'POST', body: formData });
+    const data = await res.json();
+    resultDiv.textContent = data.message;
+    resultDiv.style.color = data.success ? 'green' : 'red';
+  });
+</script>
+</body>
+</html>
